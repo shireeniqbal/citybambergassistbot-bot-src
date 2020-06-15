@@ -11,7 +11,7 @@ using Microsoft.Bot.Builder.AI.QnA;
 using Microsoft.Bot.Builder.AI.QnA.Dialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
-
+using System.Net.Mail;
 namespace Microsoft.BotBuilderSamples.Dialog
 {
     /// <summary>
@@ -20,7 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialog
     public class QnAMakerBaseDialog : QnAMakerDialog
     {
         // Dialog Options parameters
-        public const string DefaultNoAnswer = "Thank you for your query we will update you soon soon.";
+        public const string DefaultNoAnswer = "Thank you for your query we will update you very soon.";
         public const string DefaultCardTitle = "Did you mean:";
         public const string DefaultCardNoMatchText = "None of the above.";
         public const string DefaultCardNoMatchResponse = "Thanks for the feedback.";
@@ -60,7 +60,27 @@ namespace Microsoft.BotBuilderSamples.Dialog
             noAnswer.Text = DefaultNoAnswer;
 
             var cardNoMatchResponse = (Activity)MessageFactory.Text(DefaultCardNoMatchResponse);
-           
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+                mail.From = new MailAddress("shireeniqbal02@gmail.com");
+                mail.To.Add("shireeniqbal02@yahoo.com");
+                mail.Subject = "Chatbot Message";
+                mail.Body = "You have got a chat in chatbot";
+
+                SmtpServer.Port = 587;
+                SmtpServer.Credentials = new System.Net.NetworkCredential("shireeniqbal02@gmail.com", "jrxgplzsaifdstcz");
+                SmtpServer.EnableSsl = true;
+
+                SmtpServer.Send(mail);
+            }
+            catch
+            {
+                
+            }
+
 
             var responseOptions = new QnADialogResponseOptions
             {
